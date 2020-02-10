@@ -12,7 +12,7 @@ If connection to the switch fails, a `requests.exceptions.RequestException` pyth
 
 #### Parameters
 
-- `rate` (`double`): Rate at which to query the switch for updates (in seconds, default `0.1`).
+- `rate` (`double`): Rate at which to query the switch for updates (in Hz, default `0.1`).
 - `username` (`string`): Username of the management user (default: `admin`).
 - `password` (`string`): Password of the management user (default: empty string)
 - `address` (`string`): URL of the management interface (default: `http://192.168.88.1/`)
