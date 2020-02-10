@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="2">
   <name>mikrotik_swos_tools</name>
-  <version>1.0.0</version>
+  <version>1.0.1</version>
   <description>Integration between ROS (Robot Operating System) and Mikrotik SwOS</description>
 
   <license>BSD</license>
