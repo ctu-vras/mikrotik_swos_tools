@@ -128,9 +128,9 @@ class SwOSAPI:
         result.port_numbers = self.enabled_port_numbers
 
         # rate
-        result.rx_rate_bytes = [self._decode_byte_rate(d) for d in stats['rrb']]
+        result.rx_rate_bytes = [self._decode_byte_rate(d) / 8 for d in stats['rrb']]
         result.rx_rate_packets = [self._decode_packet_rate(d) for d in stats['rrp']]
-        result.tx_rate_bytes = [self._decode_byte_rate(d) for d in stats['trb']]
+        result.tx_rate_bytes = [self._decode_byte_rate(d) / 8 for d in stats['trb']]
         result.tx_rate_packets = [self._decode_packet_rate(d) for d in stats['trp']]
 
         # rx
