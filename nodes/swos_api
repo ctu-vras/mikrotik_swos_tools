@@ -178,7 +178,7 @@ class SwOSAPI:
 
     @staticmethod
     def _decode_long(s):
-        return int(s, base=16)
+        return long(s, base=16)
 
     @staticmethod
     def _decode_string(s):
