@@ -134,32 +134,32 @@ class SwOSAPI:
         result.tx_rate_packets = [self._decode_packet_rate(d) for d in stats['trp']]
 
         # rx
-        result.rx_bytes = [self._decode_long(d) for d in stats['rb']]
-        result.rx_packets = [self._decode_long(d) for d in stats['rtp']]
-        result.rx_unicasts = [self._decode_long(d) for d in stats['rup']]
-        result.rx_broadcasts = [self._decode_long(d) for d in stats['rbp']]
-        result.rx_multicasts = [self._decode_long(d) for d in stats['rmp']]
-        result.rx_64 = [self._decode_long(d) for d in stats['r64']]
-        result.rx_127 = [self._decode_long(d) for d in stats['r65']]
-        result.rx_255 = [self._decode_long(d) for d in stats['r128']]
-        result.rx_511 = [self._decode_long(d) for d in stats['r256']]
-        result.rx_1023 = [self._decode_long(d) for d in stats['r512']]
-        result.rx_1518 = [self._decode_long(d) for d in stats['r1k']]
-        result.rx_jumbo = [self._decode_long(d) for d in stats['rmax']]
+        result.rx_bytes = self._get_long_stats(stats, 'rb')
+        result.rx_packets = [self._decode_int(d) for d in stats['rtp']]
+        result.rx_unicasts = self._get_long_stats(stats, 'rup')
+        result.rx_broadcasts = self._get_long_stats(stats, 'rbp')
+        result.rx_multicasts = self._get_long_stats(stats, 'rmp')
+        result.rx_64 = [self._decode_int(d) for d in stats['r64']]
+        result.rx_127 = [self._decode_int(d) for d in stats['r65']]
+        result.rx_255 = [self._decode_int(d) for d in stats['r128']]
+        result.rx_511 = [self._decode_int(d) for d in stats['r256']]
+        result.rx_1023 = [self._decode_int(d) for d in stats['r512']]
+        result.rx_1518 = [self._decode_int(d) for d in stats['r1k']]
+        result.rx_jumbo = [self._decode_int(d) for d in stats['rmax']]
 
         # tx
-        result.tx_bytes = [self._decode_long(d) for d in stats['tb']]
-        result.tx_packets = [self._decode_long(d) for d in stats['ttp']]
-        result.tx_unicasts = [self._decode_long(d) for d in stats['tup']]
-        result.tx_broadcasts = [self._decode_long(d) for d in stats['tbp']]
-        result.tx_multicasts = [self._decode_long(d) for d in stats['tmp']]
-        result.tx_64 = [self._decode_long(d) for d in stats['t64']]
-        result.tx_127 = [self._decode_long(d) for d in stats['t65']]
-        result.tx_255 = [self._decode_long(d) for d in stats['t128']]
-        result.tx_511 = [self._decode_long(d) for d in stats['t256']]
-        result.tx_1023 = [self._decode_long(d) for d in stats['t512']]
-        result.tx_1518 = [self._decode_long(d) for d in stats['t1k']]
-        result.tx_jumbo = [self._decode_long(d) for d in stats['tmax']]
+        result.tx_bytes = self._get_long_stats(stats, 'tb')
+        result.tx_packets = [self._decode_int(d) for d in stats['ttp']]
+        result.tx_unicasts = self._get_long_stats(stats, 'tup')
+        result.tx_broadcasts = self._get_long_stats(stats, 'tbp')
+        result.tx_multicasts = self._get_long_stats(stats, 'tmp')
+        result.tx_64 = [self._decode_int(d) for d in stats['t64']]
+        result.tx_127 = [self._decode_int(d) for d in stats['t65']]
+        result.tx_255 = [self._decode_int(d) for d in stats['t128']]
+        result.tx_511 = [self._decode_int(d) for d in stats['t256']]
+        result.tx_1023 = [self._decode_int(d) for d in stats['t512']]
+        result.tx_1518 = [self._decode_int(d) for d in stats['t1k']]
+        result.tx_jumbo = [self._decode_int(d) for d in stats['tmax']]
 
         return result
 
@@ -177,8 +177,15 @@ class SwOSAPI:
         return int(s, base=16)
 
     @staticmethod
-    def _decode_long(s):
+    def _decode_int(s):
         return long(s, base=16)
+
+    @staticmethod
+    def _decode_long(s_low, s_high):
+        return long("0x" + s_high[2:] + s_low[2:], base=16)
+
+    def _get_long_stats(self, stats, param):
+        return [self._decode_long(d, dh) for d, dh in zip(stats[param], stats[param + 'h'])]
 
     @staticmethod
     def _decode_string(s):
