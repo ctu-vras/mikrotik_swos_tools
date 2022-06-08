@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<package format="2">
+<package format="3">
   <name>mikrotik_swos_tools</name>
   <version>1.0.1</version>
   <description>Integration between ROS (Robot Operating System) and Mikrotik SwOS</description>
@@ -19,5 +19,6 @@
   <depend>std_msgs</depend>
 
   <exec_depend>rospy</exec_depend>
-  <exec_depend>python-requests</exec_depend>
+  <exec_depend condition="$ROS_DISTRO != noetic">python-requests</exec_depend>
+  <exec_depend condition="$ROS_DISTRO == noetic">python3-requests</exec_depend>
 </package>
