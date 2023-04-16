@@ -44,7 +44,7 @@ class SwOSAPI:
             if rospy.is_shutdown():
                 return
 
-        self._stats_pub = rospy.Publisher('~statistics', Statistics)
+        self._stats_pub = rospy.Publisher('~statistics', Statistics, queue_size=1)
 
         rospy.loginfo("Set up Mikrotik SwOS API on %s" % (self._address, ))
 
@@ -167,7 +167,10 @@ class SwOSAPI:
 
     def run(self):
         while not rospy.is_shutdown():
-            self._stats_pub.publish(self._collect_statistics_tab_data())
+            try:
+                self._stats_pub.publish(self._collect_statistics_tab_data())
+            except requests.exceptions.RequestException as e:
+                rospy.logerr("Error communicating with Mikrotik SwOS API: " + str(e))
             self._rate.sleep()
 
     @staticmethod
