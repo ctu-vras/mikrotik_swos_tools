@@ -2,6 +2,8 @@
 
 # For license see file LICENSE in the root of this repo.
 
+from builtins import int
+
 import json
 import re
 import requests
@@ -35,7 +37,7 @@ class SwOSAPI:
                 try:
                     self._collect_sys_tab_data()
                     switch_ok = True
-                except requests.exceptions.RequestException, e:
+                except requests.exceptions.RequestException as e:
                     rospy.logwarn("Waiting for switch management interface %s to become available." % self._address)
                     rospy.logdebug("Switch management interface error: " + str(e))
                     rospy.sleep(rospy.Duration(1, 0))
@@ -117,7 +119,7 @@ class SwOSAPI:
     def _collect_statistics_tab_data(self):
 
         stats = self._api_request('!stats.b')
-        for k, values in stats.iteritems():
+        for k, values in stats.items():
             stats[k] = [val for val, enabled in zip(values, self.enabled_ports) if enabled]
 
         result = Statistics()
@@ -178,11 +180,11 @@ class SwOSAPI:
 
     @staticmethod
     def _decode_int(s):
-        return long(s, base=16)
+        return int(s, base=16)
 
     @staticmethod
     def _decode_long(s_low, s_high):
-        return long("0x" + s_high[2:] + s_low[2:], base=16)
+        return int("0x" + s_high[2:] + s_low[2:], base=16)
 
     def _get_long_stats(self, stats, param):
         return [self._decode_long(d, dh) for d, dh in zip(stats[param], stats[param + 'h'])]
@@ -190,7 +192,7 @@ class SwOSAPI:
     @staticmethod
     def _decode_string(s):
         result = ""
-        for i in range(len(s) / 2):
+        for i in range(len(s) // 2):
             strnum = s[2 * i:(2 * i + 2)]
             num = int(strnum, base=16)
             ch = chr(num)
